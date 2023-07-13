@@ -1,0 +1,31 @@
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    user: "1000"
+    volumes:
+      - ./promdata:/etc/prometheus
+      - ./promdata/data:/prometheus/data
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    restart: always
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    user: "1000"
+    volumes:
+      - ./grafdata:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: always
+
+  feedsmon:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    restart: always
