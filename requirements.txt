@@ -3,3 +3,4 @@ requests
 pyjq
 inflection
 pyyaml
+web3
