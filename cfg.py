@@ -1,4 +1,5 @@
 from yaml import load
+import os
 
 try:
     from yaml import CLoader as Loader
@@ -7,5 +8,10 @@ except ImportError:
 
 
 def load_config():
-    with open("feedsmon.yml", "r") as f:
+
+    cfg_path = os.environ.get("FEEDSMON_CONFIG")
+    if cfg_path is None:
+        cfg_path = "./feedsmon.yml"
+
+    with open(cfg_path, "r") as f:
         return load(f, Loader=Loader)
