@@ -18,7 +18,7 @@ def analyse_data_feeds(data_feed_sources):
                     data_feed_source["project"], data_feed_source["code"]
                 ).info(
                     {
-                        "status": response.status_code,
+                        "status": str(response.status_code),
                         "timestamp": current_datetime.strftime("%Y-%m-%d %H:%M:%S"),
                         "error": response.text,
                     }
