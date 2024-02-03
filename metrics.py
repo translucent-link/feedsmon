@@ -1,4 +1,5 @@
 from prometheus_client import Counter, Gauge, Info
+import logging
 
 metrics = {
     "data_feed": Gauge("data_feed", "Numeric data feed", ["project", "code"]),
@@ -63,11 +64,17 @@ def init_metrics(cfg):
         metrics["data_feed_last_error"].labels(
             data_feed_source["project"], data_feed_source["code"]
         ).info({"status": "", "timestamp": "", "error": ""})
+        logging.info(
+            f"Initialised metrics for DATAFEED {data_feed_source['project']}" +
+            f" {data_feed_source['code']}",
+        )
+
     for fluxmon_contract in cfg["fluxmon_contracts"]:
         for metric in ["fluxmon_decimals", "fluxmon_allocated_funds", "fluxmon_available_funds", "fluxmon_latest_answer", "fluxmon_latest_round", "fluxmon_withdrawable_payment"]:
             metrics[metric].labels(
                 fluxmon_contract["project"], fluxmon_contract["code"]
             ).set(0)
-        print(
-            f"Initialised metrics for {data_feed_source['project']}-{data_feed_source['code']}",
+        logging.info(
+            f"Initialised metrics for CONTRACT {fluxmon_contract['project']}" +
+            f" {fluxmon_contract['code']}",
         )

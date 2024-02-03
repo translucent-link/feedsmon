@@ -1,19 +1,24 @@
 from web3 import Web3
 from cfg import network, flux_monitor_abi
-
+import logging
 from metrics import metrics
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def analyse_fluxmon_contracts(cfg, contracts):
-    print(f"Analysing {len(contracts)} contracts...")
+    logging.info(f"Analysing {len(contracts)} contracts...")
     for contract in contracts:
-        print(
+        logging.info(
             f"Analysing contract {contract['code']} on {contract['network']}")
         chain = network(cfg['general']['networks'], contract['network'])
         if network is not None:
+            logging.info(f"Connecting to {contract['rpc']}...")
             w3 = Web3(Web3.HTTPProvider(chain["rpc"]))
 
             if w3.is_connected():
+                logging.info(f"Connected to {contract['network']}")
                 contract_instance = w3.eth.contract(
                     contract["address"], abi=flux_monitor_abi)
                 decimals = contract_instance.functions.decimals().call()
@@ -46,6 +51,6 @@ def analyse_fluxmon_contracts(cfg, contracts):
                 ).set(withdrawable_payment)
 
             else:
-                print(f"Failed to connect to {contract['network']}")
+                logging.info(f"Failed to connect to {contract['network']}")
         else:
-            print(f"Network {contract['network']} not found in config")
+            logging.info(f"Network {contract['network']} not found in config")
