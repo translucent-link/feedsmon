@@ -14,7 +14,7 @@ def analyse_fluxmon_contracts(cfg, contracts):
             f"Analysing contract {contract['code']} on {contract['network']}")
         chain = network(cfg['general']['networks'], contract['network'])
         if network is not None:
-            logging.info(f"Connecting to {contract['rpc']}...")
+            logging.info(f"Connecting to {chain['rpc']}...")
             w3 = Web3(Web3.HTTPProvider(chain["rpc"]))
 
             if w3.is_connected():
